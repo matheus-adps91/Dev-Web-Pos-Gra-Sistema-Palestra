@@ -20,6 +20,9 @@
     "@ng-bootstrap/ng-bootstrap": "^20.0.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.8",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "mysql2": "^3.22.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -32,5 +35,19 @@
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
-  }
+  },
+  "description": "This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.13.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matheus-adps91/Dev-Web-Pos-Gra-Sistema-Palestra.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/matheus-adps91/Dev-Web-Pos-Gra-Sistema-Palestra/issues"
+  },
+  "homepage": "https://github.com/matheus-adps91/Dev-Web-Pos-Gra-Sistema-Palestra#readme"
 }
