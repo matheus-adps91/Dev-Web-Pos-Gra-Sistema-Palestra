@@ -7,10 +7,8 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post(
-  '/api/cadastro',
-  async (req, res) => {
-    const { email, nome, senha } = req.body;
+app.post('/api/cadastro', async (req, res) => {
+  const { email, nome, senha } = req.body;
   try {
     // Verifica se o email já está cadastrado
     const [usuarios] = await conexao.execute('SELECT * FROM usuarios WHERE email = ?', [email]);
@@ -26,6 +24,28 @@ app.post(
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: `Erro ao cadastrar: ${error.message}` });
+  }
+});
+
+app.post('/api/login', async (req, res) => {
+  const { email, senha } = req.body;
+  try {
+    const [usuario] = await conexao.execute('SELECT * FROM usuarios WHERE email = ?', [email]);
+    if (usuario.length === 0) {
+      return res.json({ message: 'Email ou senha inválidos', tipoMensagem: 'danger' });
+    }
+    const verificaUsuario = usuario[0];
+    if (verificaUsuario.senha !== senha) {
+      return res.json({ message: 'Senha inválida!', tipoMensagem: 'danger' });
+    }
+    const userData = {
+      email: verificaUsuario.email,
+      nome: verificaUsuario.nome,
+      admin: verificaUsuario.admin,
+    };
+    res.json({ message: 'Login realizado com sucesso!', userData, tipoMensagem: 'success' });
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao logar!' });
   }
 });
 
