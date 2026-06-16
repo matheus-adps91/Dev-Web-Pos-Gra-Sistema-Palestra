@@ -2,6 +2,7 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Auth } from '../auth';
 
 interface respostaLogin {
   message: string;
@@ -25,6 +26,7 @@ export class Login {
     private http: HttpClient,
     private router: Router,
     private cdr: ChangeDetectorRef,
+    private authService: Auth,
   ) {}
 
   formularioLogin = new FormGroup({
@@ -50,9 +52,8 @@ export class Login {
             this.mensagem = res.message || 'Login realizado com sucesso!';
             this.cdr.detectChanges();
             if (res.tipoMensagem === 'success') {
-              this.router.navigateByUrl('/home', {
-                state: { userData: res.userData },
-              });
+              this.authService.login(res.userData);
+              this.router.navigateByUrl('/home');
             }
           },
           error: (err) => {
