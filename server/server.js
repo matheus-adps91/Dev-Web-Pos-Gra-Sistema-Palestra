@@ -27,7 +27,11 @@ app.post('/api/cadastro', async (req, res) => {
   }
 });
 
-app.post('/api/login', async (req, res) => {
+app.post(
+  '/api/login',
+  async (
+    req, res
+  ) => {
   const { email, senha } = req.body;
   try {
     const [usuario] = await conexao.execute('SELECT * FROM usuarios WHERE email = ?', [email]);
@@ -39,6 +43,7 @@ app.post('/api/login', async (req, res) => {
       return res.json({ message: 'Senha inválida!', tipoMensagem: 'danger' });
     }
     const userData = {
+      id: verificaUsuario.ID,
       email: verificaUsuario.email,
       nome: verificaUsuario.nome,
       admin: verificaUsuario.admin,
@@ -48,6 +53,56 @@ app.post('/api/login', async (req, res) => {
     res.status(500).json({ message: 'Erro ao logar!' });
   }
 });
+
+app.post(
+  '/api/admin',
+  async (req, res) => {
+  const { titulo, descricao, nomePalestrante, localEvento, dataEvento } =
+    req.body;
+  const dadosEvento = [titulo, descricao, nomePalestrante, localEvento,
+    dataEvento];
+  try {
+    console.log(dadosEvento);
+    await conexao.execute(
+      "INSERT INTO palestra(titulo, descricao,nomePalestrante, localEvento, dataEvento) VALUES(?,?,?,?,?)",
+      dadosEvento);
+    res.status(201).json({ message: "Evento cadastrado com sucesso!" });
+  } catch (error) {
+    console.log(`Erro interno: ${error}`);
+    res.status(500).json({ message: 'Erro ao cadastrar evento!' })
+  }
+});
+
+app.get('/api/palestras', async (req, res) => {
+  try {
+    const [rows] = await conexao.execute('SELECT * FROM palestra');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro interno' });
+  }
+});
+
+app.post(
+  "/api/inscricao",
+  async (
+    req, res
+  ) => {
+  const { idUsuario, idPalestra } = req.body;
+  try {
+    await conexao.execute(
+      "INSERT INTO inscricoes (idUsuario, idPalestra) VALUES (?,?)",
+      [idUsuario, idPalestra]
+    );
+    res.status(201).json({ message: "Inscrição realizada :)" });
+  } catch (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+      res.status(400).json({ message: "Você já se inscreveu nesse evento!" });
+      } else {
+        res.status(500).json({ message: "Erro ao realizar a inscrição :("
+        });
+      }
+    }
+  });
 
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));

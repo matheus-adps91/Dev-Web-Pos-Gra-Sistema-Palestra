@@ -9,11 +9,11 @@ export class Auth {
 
   constructor(private router: Router) {}
 
-  login(userData: { email: string; nome: string; admin: boolean }): void {
+  login(userData: { id: number; email: string; nome: string; admin: boolean }): void {
     localStorage.setItem(this.key, JSON.stringify(userData));
   }
 
-  getUser(): { email: string; nome: string; admin: boolean } | null {
+  getUser(): { id: number; email: string; nome: string; admin: boolean } | null {
     const data = localStorage.getItem(this.key);
     return data ? JSON.parse(data) : null;
   }

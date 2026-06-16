@@ -8,6 +8,7 @@ interface respostaLogin {
   message: string;
   tipoMensagem: string;
   userData: {
+    id: number;
     email: string;
     nome: string;
     admin: boolean;
